@@ -38,9 +38,9 @@ object FcmSync {
 
     private fun ensureAuth(onReady: () -> Unit) {
         val auth = FirebaseAuth.getInstance()
-        if (auth.currentUser != null) { onReady(); return }
+        if (auth.currentUser != null) { Log.d(TAG, "ensureAuth: already signed in as ${auth.currentUser?.uid}"); onReady(); return }
         auth.signInAnonymously()
-            .addOnSuccessListener { onReady() }
+            .addOnSuccessListener { Log.d(TAG, "ensureAuth: signed in as ${it.user?.uid}"); onReady() }
             .addOnFailureListener { e -> Log.w(TAG, "anonymous sign-in failed", e) }
     }
 
@@ -63,6 +63,7 @@ object FcmSync {
      */
     fun pushOccurrences(context: Context, medicationId: Long, occurrences: List<Long>) {
         val deviceId = getDeviceId(context)
+        Log.d(TAG, "pushOccurrences: device=$deviceId med=$medicationId count=${occurrences.size}")
         ensureAuth {
             db.collection("users").document(deviceId)
                 .collection("medications").document(medicationId.toString())
@@ -71,6 +72,7 @@ object FcmSync {
                     "occurrences" to occurrences,
                     "updatedAt" to System.currentTimeMillis()
                 ))
+                .addOnSuccessListener { Log.d(TAG, "pushOccurrences SUCCESS for med $medicationId") }
                 .addOnFailureListener { e -> Log.w(TAG, "pushOccurrences failed for med $medicationId", e) }
         }
     }

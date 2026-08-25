@@ -20,3 +20,4 @@ github-action/node_modules/
 
 # Not required for the GitHub Action (it only runs github-action/), keep it local-only anyway
 app/google-services.json
+github-action/verify.js

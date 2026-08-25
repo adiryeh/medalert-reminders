@@ -1,5 +1,6 @@
 package com.medalert.fcm
 
+import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.medalert.data.repository.MedicationRepository
@@ -22,6 +23,7 @@ class FcmReceiverService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        Log.d("FcmReceiverService", "onMessageReceived: data=${message.data}")
         val medicationId = message.data["medicationId"]?.toLongOrNull() ?: return
         val scheduledTime = message.data["scheduledTime"]?.toLongOrNull() ?: return
 
