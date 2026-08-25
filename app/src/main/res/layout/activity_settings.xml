@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#1565C0"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚙ ניהול"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Audit Log Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋 יומן התראות"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1565C0"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="בדוק האם ההתראות קפצו בזמן ומה קרה בכל אחת"
+                    android:textSize="13sp"
+                    android:textColor="#666"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnAuditLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📋 פתח יומן התראות"
+                    android:backgroundTint="#37474F"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Persons Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="👥 רשימת שמות לתרופות"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1565C0"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="הגדר שמות (אני, אמא, ילד...) עם צבע ייחודי לכל אחד"
+                    android:textSize="13sp"
+                    android:textColor="#666"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnManagePersons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="👥 ניהול שמות וצבעים"
+                    android:backgroundTint="#1565C0"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Medications Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="💊 התרופות שלי"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#1565C0"/>
+
+                    <Button
+                        android:id="@+id/btnAddMedication"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="➕ הוסף"
+                        android:backgroundTint="#1565C0"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutMedicationsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <TextView
+                    android:id="@+id/tvNoMedications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="אין תרופות מוגדרות עדיין"
+                    android:textColor="#888"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Display Settings Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🖥 מצב תצוגה"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1565C0"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Biometric row — hidden if device doesn't support it -->
+                <LinearLayout
+                    android:id="@+id/rowBiometric"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔒 נעילה ביומטרית"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="טביעת אצבע / זיהוי פנים בכניסה"
+                            android:textSize="12sp"
+                            android:textColor="#666"/>
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchBiometric"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="12dp"/>
+
+                <RadioGroup
+                    android:id="@+id/rgDarkMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbSystem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="מערכת"/>
+
+                    <RadioButton
+                        android:id="@+id/rbLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="יום"/>
+
+                    <RadioButton
+                        android:id="@+id/rbDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="לילה"/>
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Backup Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💾 גיבוי ושחזור"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1565C0"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ייצא את כל הנתונים לקובץ JSON לגיבוי ידני או למעבר טלפון."
+                    android:textSize="13sp"
+                    android:textColor="#666"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnExport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📤 ייצא גיבוי לקובץ"
+                    android:backgroundTint="#1565C0"
+                    android:layout_marginBottom="8dp"/>
+
+                <Button
+                    android:id="@+id/btnImport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📥 שחזר מקובץ גיבוי"
+                    android:backgroundTint="#388E3C"
+                    android:layout_marginBottom="12dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="גיבוי פנימי אחרון:"
+                        android:textStyle="bold"
+                        android:textSize="13sp"/>
+
+                    <Button
+                        android:id="@+id/btnBackupNow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔄 גבה עכשיו"
+                        android:backgroundTint="#FF8F00"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvAutoBackupList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="אין גיבוי פנימי"
+                    android:textSize="12sp"
+                    android:textColor="#555"
+                    android:fontFamily="monospace"
+                    android:background="#F5F5F5"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Progress bar (hidden by default) -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

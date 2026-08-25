@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#1565C0"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="👥 ניהול אנשים"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnAddPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="➕ הוסף"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#1565C0"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="כל תרופה תקבל את הצבע של האדם שהיא עבורו"
+        android:textSize="13sp"
+        android:textColor="#666"
+        android:padding="12dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPersons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/tvNoPersons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="אין אנשים מוגדרים עדיין\nלחץ ➕ הוסף כדי להוסיף"
+        android:gravity="center"
+        android:textColor="#888"
+        android:padding="32dp"
+        android:visibility="gone"/>
+</LinearLayout>

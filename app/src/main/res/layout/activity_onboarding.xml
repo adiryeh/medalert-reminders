@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💊 MedAlert"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#1565C0"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="כדי שההתראות יעבדו בצורה אמינה,\nדרושות שלוש הרשאות:"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="#444"
+            android:layout_marginBottom="28dp"/>
+
+        <!-- Permission 1: Notifications -->
+        <LinearLayout
+            android:id="@+id/rowNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:id="@+id/tvNotifStatus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="⏳"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔔 הרשאת התראות"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="הכרחי להצגת תזכורות תרופות"
+                    android:textSize="12sp"
+                    android:textColor="#666"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGrantNotif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הענק"
+                android:textSize="12sp"
+                android:backgroundTint="#1565C0"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+        </LinearLayout>
+
+        <!-- Permission 2: Exact Alarms -->
+        <LinearLayout
+            android:id="@+id/rowExactAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:id="@+id/tvAlarmStatus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="⏳"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏰ תזמון מדויק"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="התראות בדיוק בזמן שנקבע"
+                    android:textSize="12sp"
+                    android:textColor="#666"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGrantAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הענק"
+                android:textSize="12sp"
+                android:backgroundTint="#1565C0"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+        </LinearLayout>
+
+        <!-- Permission 3: Battery Optimization -->
+        <LinearLayout
+            android:id="@+id/rowBattery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:id="@+id/tvBatteryStatus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="⏳"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔋 ללא הגבלת סוללה"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="מונע מהמערכת לבטל התראות ברקע"
+                    android:textSize="12sp"
+                    android:textColor="#666"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGrantBattery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הענק"
+                android:textSize="12sp"
+                android:backgroundTint="#1565C0"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+        </LinearLayout>
+
+        <!-- Permission 4: OEM Autostart (hidden by default, shown only on affected OEMs) -->
+        <LinearLayout
+            android:id="@+id/rowOem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginBottom="28dp"
+            android:background="#FFF8E1"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvOemStatus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:text="⚠️"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/tvOemTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📱 הפעלה אוטומטית"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvOemDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="מונע מהיצרן לסגור את האפליקציה"
+                    android:textSize="12sp"
+                    android:textColor="#666"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGrantOem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="פתח"
+                android:textSize="12sp"
+                android:backgroundTint="#FF8F00"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✅ התחל שימוש"
+            android:backgroundTint="#388E3C"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+</ScrollView>

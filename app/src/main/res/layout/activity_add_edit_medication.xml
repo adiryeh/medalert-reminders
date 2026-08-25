@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Person assignment -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👤 עבור מי"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"/>
+
+            <View
+                android:id="@+id/personColorDot"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="#9E9E9E"
+                android:layout_marginEnd="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerPerson"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="שם התרופה *"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="לדוגמה: אמוקסיצילין"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="מינון (אופציונלי)"/>
+
+        <EditText
+            android:id="@+id/etDosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="לדוגמה: 500mg"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="הערות (אופציונלי)"/>
+
+        <EditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="הערות נוספות"
+            android:inputType="textMultiLine"
+            android:lines="2"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="סוג לוח זמנים"/>
+
+        <Spinner
+            android:id="@+id/spinnerScheduleType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- שעה ראשונה — תמיד מוצגת -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="שעת נטילה"/>
+
+        <EditText
+            android:id="@+id/etTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="08:00"
+            android:inputType="time"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- שעות נוספות — רק ל"מספר פעמים ביום" -->
+        <LinearLayout
+            android:id="@+id/layoutExtraTimes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/etTime2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="14:00 (שעה שנייה)"
+                android:inputType="time"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etTime3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="20:00 (שעה שלישית, אופציונלי)"
+                android:inputType="time"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+
+        <!-- בחירת ימים — רק ל"ימים ספציפיים" -->
+        <LinearLayout
+            android:id="@+id/layoutDaysOfWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="בחר ימים:"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cbSun"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="א׳"/>
+                <CheckBox
+                    android:id="@+id/cbMon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ב׳"/>
+                <CheckBox
+                    android:id="@+id/cbTue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ג׳"/>
+                <CheckBox
+                    android:id="@+id/cbWed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ד׳"/>
+                <CheckBox
+                    android:id="@+id/cbThu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ה׳"/>
+                <CheckBox
+                    android:id="@+id/cbFri"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ו׳"/>
+                <CheckBox
+                    android:id="@+id/cbSat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ש׳"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- מרווח ימים — רק ל"כל X ימים" -->
+        <LinearLayout
+            android:id="@+id/layoutInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="כל כמה ימים: "/>
+
+            <EditText
+                android:id="@+id/etIntervalDays"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:hint="2"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <!-- מחזור — רק ל"מחזור מורכב" -->
+        <LinearLayout
+            android:id="@+id/layoutCycle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ימי נטילה: "/>
+
+            <EditText
+                android:id="@+id/etCycleOn"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:hint="3"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  ימי הפסקה: "/>
+
+            <EditText
+                android:id="@+id/etCycleOff"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:hint="1"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <!-- ===== הגדרות התראה ===== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="הגדרות התראה"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- צליל -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="צליל התראה"
+            android:layout_marginBottom="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <!-- Hidden spinner kept for backward compat (soundEnabled field) -->
+            <Spinner
+                android:id="@+id/spinnerSound"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvSoundName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ברירת מחדל"
+                android:textSize="13sp"
+                android:textColor="#333"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:paddingStart="4dp"/>
+
+            <Button
+                android:id="@+id/btnPickSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔔 בחר"
+                android:textSize="12sp"
+                android:backgroundTint="#1565C0"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+
+            <Button
+                android:id="@+id/btnSilentSound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔕 שקט"
+                android:textSize="12sp"
+                android:backgroundTint="#757575"
+                style="@style/Widget.MaterialComponents.Button"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:layout_marginStart="4dp"/>
+        </LinearLayout>
+
+        <!-- רטט -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="רטט"/>
+            <Switch
+                android:id="@+id/switchVibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"/>
+        </LinearLayout>
+
+        <!-- עדיפות -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="עדיפות"/>
+        <Spinner
+            android:id="@+id/spinnerPriority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- חזרה על תזכורת -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="חזרה אם לא אושר"/>
+        <Spinner
+            android:id="@+id/spinnerSnooze"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="שמור"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ביטול"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

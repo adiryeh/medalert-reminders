@@ -1,0 +1,22 @@
+build/
+.gradle/
+local.properties
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.dex
+
+# Never commit Firebase service account keys or other credentials
+*serviceAccount*.json
+*firebase-adminsdk*.json
+*.pem
+*.key
+
+github-action/node_modules/
+
+# Not required for the GitHub Action (it only runs github-action/), keep it local-only anyway
+app/google-services.json

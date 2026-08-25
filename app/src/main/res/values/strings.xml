@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MedAlert</string>
+    <string name="today">היום</string>
+    <string name="add_medication">הוסף תרופה</string>
+    <string name="medication_name">שם התרופה</string>
+    <string name="dosage">מינון</string>
+    <string name="notes">הערות</string>
+    <string name="save">שמור</string>
+    <string name="cancel">ביטול</string>
+    <string name="taken">נלקח ✅</string>
+    <string name="skip">דלג ❌</string>
+    <string name="snooze_5">תזכיר בעוד 5 דקות</string>
+    <string name="snooze_15">תזכיר בעוד 15 דקות</string>
+    <string name="snooze_30">תזכיר בעוד 30 דקות</string>
+    <string name="time_to_take_medication">זמן לקחת תרופה</string>
+    <string name="inventory">מלאי</string>
+    <string name="history">היסטוריה</string>
+    <string name="settings">הגדרות</string>
+    <string name="dark_mode">מצב לילה</string>
+    <string name="light_mode">מצב יום</string>
+    <string name="system_default">ברירת מחדל</string>
+    <string name="grant_permissions">אשר הרשאות</string>
+    <string name="continue_btn">המשך</string>
+    <string name="onboarding_title">ברוכים הבאים ל-MedAlert</string>
+    <string name="onboarding_desc">כדי להבטיח תזכורות מדויקות, יש לאשר את ההרשאות הבאות.</string>
+    <string name="schedule_time">שעת נטילה</string>
+    <string name="schedule_type">סוג לוח זמנים</string>
+    <string name="auto_backup">גיבוי אוטומטי יומי</string>
+    <string name="time_format_24h">פורמט 24 שעות</string>
+</resources>

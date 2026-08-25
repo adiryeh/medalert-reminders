@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical"
+    android:layoutDirection="rtl"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Color circle -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp">
+
+        <View
+            android:id="@+id/viewPersonColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#2196F3"/>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/tvPersonName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <!-- Edit -->
+    <Button
+        android:id="@+id/btnEditPerson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✏"
+        android:textSize="16sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+    <!-- Delete -->
+    <Button
+        android:id="@+id/btnDeletePerson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🗑"
+        android:textSize="16sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+</LinearLayout>

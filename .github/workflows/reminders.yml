@@ -1,0 +1,27 @@
+name: MedAlert reminder sender
+
+on:
+  schedule:
+    # Every 5 minutes — GitHub's minimum cron granularity, and actual runs can slip
+    # by a couple of minutes under load; GRACE_MS in the script tolerates this.
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {} # allows manually triggering a run from the Actions tab, for testing
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: github-action
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm install
+
+      - run: npm start
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}

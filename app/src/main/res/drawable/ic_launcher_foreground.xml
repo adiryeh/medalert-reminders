@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!--
+        Two pill capsules, both rotated -45°, centered on the canvas.
+        Capsule 1 (upper): red left half + yellow right half  — center (54, 40)
+        Capsule 2 (lower): yellow left half + red right half  — center (54, 66)
+        Each capsule: 46 wide × 18 tall, corner-radius = 9
+    -->
+
+    <group
+        android:rotation="-45"
+        android:pivotX="54"
+        android:pivotY="54">
+
+        <!-- ══ Capsule 1 — center (54, 40) ══ -->
+
+        <!-- Left (red) half -->
+        <path
+            android:fillColor="#E53935"
+            android:pathData="M 54,31 L 41,31 A 9,9 0 0 0 41,49 L 54,49 Z"/>
+
+        <!-- Right (yellow) half -->
+        <path
+            android:fillColor="#FDD835"
+            android:pathData="M 54,31 L 67,31 A 9,9 0 0 1 67,49 L 54,49 Z"/>
+
+        <!-- Outline -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#B71C1C"
+            android:strokeWidth="1.8"
+            android:pathData="M 67,31 A 9,9 0 0 1 67,49 L 41,49 A 9,9 0 0 1 41,31 Z"/>
+
+        <!-- Centre dividing line -->
+        <path
+            android:strokeColor="#5D4037"
+            android:strokeWidth="1.8"
+            android:pathData="M 54,31 L 54,49"/>
+
+        <!-- Shine highlight -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.40"
+            android:pathData="M 44,34 Q 51,31 54,32 L 54,36 Q 51,35 44,37 Z"/>
+
+        <!-- ══ Capsule 2 — center (54, 66) ══ -->
+
+        <!-- Left (yellow) half -->
+        <path
+            android:fillColor="#FDD835"
+            android:pathData="M 54,57 L 41,57 A 9,9 0 0 0 41,75 L 54,75 Z"/>
+
+        <!-- Right (red) half -->
+        <path
+            android:fillColor="#E53935"
+            android:pathData="M 54,57 L 67,57 A 9,9 0 0 1 67,75 L 54,75 Z"/>
+
+        <!-- Outline -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#B71C1C"
+            android:strokeWidth="1.8"
+            android:pathData="M 67,57 A 9,9 0 0 1 67,75 L 41,75 A 9,9 0 0 1 41,57 Z"/>
+
+        <!-- Centre dividing line -->
+        <path
+            android:strokeColor="#5D4037"
+            android:strokeWidth="1.8"
+            android:pathData="M 54,57 L 54,75"/>
+
+        <!-- Shine highlight -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.40"
+            android:pathData="M 44,60 Q 51,57 54,58 L 54,62 Q 51,61 44,63 Z"/>
+
+    </group>
+
+</vector>

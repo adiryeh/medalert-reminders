@@ -1,0 +1,13 @@
+{
+  "name": "medalert-reminder-sender",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Last-resort FCM push sender for MedAlert. Polls anonymized medication schedule timestamps in Firestore and sends a push if a dose is overdue.",
+  "main": "send-reminders.js",
+  "scripts": {
+    "start": "node send-reminders.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

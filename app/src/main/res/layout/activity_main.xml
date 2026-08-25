@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/colorPrimary"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="💊 MedAlert"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+    <!-- Permission warning (hidden by default) -->
+    <TextView
+        android:id="@+id/tvPermissionWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFEBEE"
+        android:textColor="#C62828"
+        android:padding="10dp"
+        android:textSize="13sp"
+        android:visibility="gone"/>
+
+    <!-- Today summary -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#EEF2FF"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="היום" android:textSize="11sp" android:textColor="#888"/>
+            <TextView android:id="@+id/tvMedicationsCount"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textSize="20sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="תרופות" android:textSize="11sp" android:textColor="#888"/>
+        </LinearLayout>
+
+        <View android:layout_width="1dp" android:layout_height="40dp" android:background="#CCC"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="✅" android:textSize="14sp"/>
+            <TextView android:id="@+id/tvCompleted"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textSize="18sp" android:textColor="#4CAF50"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="נלקחו" android:textSize="11sp" android:textColor="#888"/>
+        </LinearLayout>
+
+        <View android:layout_width="1dp" android:layout_height="40dp" android:background="#CCC"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⏳" android:textSize="14sp"/>
+            <TextView android:id="@+id/tvPending"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textSize="18sp" android:textColor="#FF9800"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="ממתין" android:textSize="11sp" android:textColor="#888"/>
+        </LinearLayout>
+
+        <View android:layout_width="1dp" android:layout_height="40dp" android:background="#CCC"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="❌" android:textSize="14sp"/>
+            <TextView android:id="@+id/tvMissed"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="0" android:textSize="18sp" android:textColor="#F44336"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="הוחמץ" android:textSize="11sp" android:textColor="#888"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button android:id="@+id/btnAddMedication"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="➕ הוסף" android:layout_marginEnd="4dp"/>
+
+        <Button android:id="@+id/btnInventory"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="📦 מלאי" android:layout_marginEnd="4dp"/>
+
+        <Button android:id="@+id/btnHistory"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="📋 דוח" android:layout_marginEnd="4dp"/>
+
+        <Button android:id="@+id/btnSettings"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:text="⚙ ניהול"/>
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════
+         OVERDUE — fixed, no scroll (always visible)
+    ═══════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/tvPastHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚠ לא טופלו"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#F44336"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPastAlerts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never"/>
+
+    <!-- ═══════════════════════════════════════════════════
+         DONE TODAY — fixed, no scroll (always visible)
+    ═══════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/tvDoneHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="✅ טופל היום"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#4CAF50"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerDoneAlerts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never"/>
+
+    <!-- ═══════════════════════════════════════════════════
+         TODAY PENDING — fixed, no scroll (always visible)
+    ═══════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/tvTodayPendingHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⏳ ממתין להיום"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#FF9800"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTodayPendingAlerts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never"/>
+
+    <!-- ═══════════════════════════════════════════════════
+         UPCOMING WEEK — fills remaining space, scrolls independently
+    ═══════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/tvUpcomingHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📅 השבוע הקרוב"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerUpcomingAlerts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

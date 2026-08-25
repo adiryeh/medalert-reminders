@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
+    <application
+        android:name=".MedAlertApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MedAlert">
+
+        <activity android:name=".ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.medication.AddEditMedicationActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.alert.AlertActivity"
+            android:exported="false"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:launchMode="singleInstance" />
+
+        <activity android:name=".ui.history.HistoryActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.inventory.InventoryActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.persons.PersonsActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.settings.AuditLogActivity"
+            android:exported="false" />
+
+        <receiver android:name=".alarm.AlarmReceiver"
+            android:exported="false" />
+
+        <!-- Handles ✅/❌/⏰ quick-action taps directly from the notification shade -->
+        <receiver android:name=".alarm.NotificationActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.medalert.ACTION_TAKEN" />
+                <action android:name="com.medalert.ACTION_SKIP" />
+                <action android:name="com.medalert.ACTION_SNOOZE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Fires ~20 min after alarm if no response; shows quiet follow-up nudge -->
+        <receiver android:name=".alarm.MissedCheckReceiver"
+            android:exported="false" />
+
+        <receiver android:name=".alarm.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <!-- Restore alarms after app update — system clears AlarmManager on upgrade -->
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".alarm.TimeChangeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Last-resort push fallback: only fires if AlarmManager + SafetyNetWorker both missed a dose -->
+        <service android:name=".fcm.FcmReceiverService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".widget.MedAlertWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
+    </application>
+</manifest>
