@@ -1,6 +1,7 @@
 package com.medalert.data.repository
 
 import android.content.Context
+import androidx.room.withTransaction
 import com.medalert.data.db.AppDatabase
 import com.medalert.data.db.entity.*
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +53,11 @@ class MedicationRepository(context: Context) {
         val schedule = scheduleDao.getForMedication(med.id).firstOrNull()
         if (schedule != null) {
             com.medalert.alarm.AlarmScheduler.scheduleAlarms(context, reactivated, schedule)
+        } else {
+            // Should never happen (a schedule is created alongside every medication), but if it
+            // does the medication would otherwise come back "active" with zero alarms and no
+            // visible sign anything is wrong — surface it in the audit log instead of a silent no-op.
+            logAudit(med.id, med.name, System.currentTimeMillis(), "REACTIVATE_FAILED", "no schedule found")
         }
     }
 
@@ -117,6 +123,32 @@ class MedicationRepository(context: Context) {
         auditDao.countMatching(medicationId, scheduledTime, "SAFETY_NET_FIRED") > 0 ||
         auditDao.countMatching(medicationId, scheduledTime, "FCM_FIRED") > 0
     }
+
+    /**
+     * Atomically checks hasAnyFireEvent() and, if nobody has claimed this dose yet, logs [event]
+     * in the same DB transaction and returns true. Three independent channels (AlarmReceiver,
+     * SafetyNetWorker, FcmReceiverService) can all wake up within the same window and race each
+     * other; a plain check-then-insert (the old pattern) lets two of them both pass the check
+     * before either writes, producing a duplicate notification. Callers should show the
+     * notification only when this returns true.
+     */
+    suspend fun claimFire(medicationId: Long, medicationName: String, scheduledTime: Long, event: String, note: String = ""): Boolean =
+        withContext(Dispatchers.IO) {
+            db.withTransaction {
+                if (hasAnyFireEvent(medicationId, scheduledTime)) {
+                    false
+                } else {
+                    auditDao.insert(AlarmAuditLog(
+                        medicationId = medicationId,
+                        medicationName = medicationName,
+                        scheduledTime = scheduledTime,
+                        event = event,
+                        note = note
+                    ))
+                    true
+                }
+            }
+        }
 
     suspend fun getRecentAuditLog(days: Int = 14): List<com.medalert.data.db.entity.AlarmAuditLog> {
         val since = System.currentTimeMillis() - days * 86_400_000L

@@ -33,6 +33,10 @@ object AlarmScheduler {
 
     fun scheduleAlarms(context: Context, medication: Medication, schedule: Schedule) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        // A schedule change invalidates any pending missed-check tied to the old scheduledTime
+        // it was watching — otherwise it can fire later referencing a dose time that no longer
+        // matches this medication's current schedule.
+        cancelMissedCheck(context, medication.id)
         val occurrences = schedule.nextOccurrences(MAX_FUTURE_ALARMS)
         occurrences.forEachIndexed { index, timeMillis ->
             val intent = Intent(context, AlarmReceiver::class.java).apply {

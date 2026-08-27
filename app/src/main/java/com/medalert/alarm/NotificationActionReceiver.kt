@@ -46,14 +46,19 @@ class NotificationActionReceiver : BroadcastReceiver() {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val repo = MedicationRepository(context)
-                        repo.logIntake(IntakeHistory(
-                            medicationId    = medicationId,
-                            scheduledDateTime = scheduledTime,
-                            actualDateTime  = System.currentTimeMillis(),
-                            status          = IntakeStatus.TAKEN
-                        ))
-                        repo.decrementInventory(medicationId, context)
-                        repo.logAudit(medicationId, medicationName, scheduledTime, "ACTION_TAKEN")
+                        // Idempotency guard: duplicate notifications from a race between
+                        // AlarmReceiver/SafetyNetWorker/FcmReceiverService could otherwise let
+                        // the user tap "Taken" twice for the same dose, double-decrementing inventory.
+                        if (repo.getHistoryEntry(medicationId, scheduledTime) == null) {
+                            repo.logIntake(IntakeHistory(
+                                medicationId    = medicationId,
+                                scheduledDateTime = scheduledTime,
+                                actualDateTime  = System.currentTimeMillis(),
+                                status          = IntakeStatus.TAKEN
+                            ))
+                            repo.decrementInventory(medicationId, context)
+                            repo.logAudit(medicationId, medicationName, scheduledTime, "ACTION_TAKEN")
+                        }
                     } finally {
                         NotificationHelper.cancelAlert(context, medicationId)
                         AlarmScheduler.cancelMissedCheck(context, medicationId)
@@ -67,13 +72,15 @@ class NotificationActionReceiver : BroadcastReceiver() {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val repo = MedicationRepository(context)
-                        repo.logIntake(IntakeHistory(
-                            medicationId      = medicationId,
-                            scheduledDateTime = scheduledTime,
-                            actualDateTime    = System.currentTimeMillis(),
-                            status            = IntakeStatus.SKIPPED
-                        ))
-                        repo.logAudit(medicationId, medicationName, scheduledTime, "ACTION_SKIPPED")
+                        if (repo.getHistoryEntry(medicationId, scheduledTime) == null) {
+                            repo.logIntake(IntakeHistory(
+                                medicationId      = medicationId,
+                                scheduledDateTime = scheduledTime,
+                                actualDateTime    = System.currentTimeMillis(),
+                                status            = IntakeStatus.SKIPPED
+                            ))
+                            repo.logAudit(medicationId, medicationName, scheduledTime, "ACTION_SKIPPED")
+                        }
                     } finally {
                         NotificationHelper.cancelAlert(context, medicationId)
                         AlarmScheduler.cancelMissedCheck(context, medicationId)

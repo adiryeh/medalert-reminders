@@ -27,15 +27,16 @@ class AlarmReceiver : BroadcastReceiver() {
             try {
                 val repo = MedicationRepository(context)
                 repo.logAudit(medicationId, medicationName, scheduledTime, "RECEIVER_FIRED")
-                if (repo.getHistoryEntry(medicationId, scheduledTime) != null ||
-                    repo.hasAnyFireEvent(medicationId, scheduledTime)) {
-                    return@launch
-                }
+                if (repo.getHistoryEntry(medicationId, scheduledTime) != null) return@launch
+
+                // Atomically check-and-claim so SafetyNetWorker/FcmReceiverService racing in
+                // for the same dose can't both pass a plain check before either writes.
+                if (!repo.claimFire(medicationId, medicationName, scheduledTime, "NOTIFICATION_SHOWN")) return@launch
+
                 val settings = repo.getSettings(medicationId)
                 NotificationHelper.showMedicationAlert(
                     context, medicationId, medicationName, dosage, scheduledTime, settings
                 )
-                repo.logAudit(medicationId, medicationName, scheduledTime, "NOTIFICATION_SHOWN")
                 // Schedule a missed-check 20 minutes later.
                 // If the user acts (taken/skip/snooze) the check is cancelled automatically.
                 val isSnooze = intent.getBooleanExtra("is_snooze", false)

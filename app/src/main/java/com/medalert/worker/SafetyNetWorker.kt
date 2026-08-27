@@ -43,26 +43,31 @@ class SafetyNetWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(
 
         if (windowEnd > windowStart) {
             for (med in medications) {
-                val schedule = repo.getSchedule(med.id) ?: continue
-                val settings = repo.getSettings(med.id)
+                // Isolate failures per medication — one bad schedule (e.g. corrupt JSON, a
+                // null settings row) must not stop the safety net from checking every other
+                // medication in this run. Mirrors RescheduleWorker's per-item isolation.
+                try {
+                    val schedule = repo.getSchedule(med.id) ?: continue
+                    val settings = repo.getSettings(med.id)
 
-                val occurrences = occurrencesInRange(schedule, windowStart, windowEnd)
-                for (time in occurrences) {
-                    // Already handled by user (taken / skipped / missed)?
-                    if (repo.getHistoryEntry(med.id, time) != null) continue
+                    val occurrences = occurrencesInRange(schedule, windowStart, windowEnd)
+                    for (time in occurrences) {
+                        // Already handled by user (taken / skipped / missed)?
+                        if (repo.getHistoryEntry(med.id, time) != null) continue
 
-                    // User already snoozed — AlarmManager will re-fire on its own
-                    if (AlarmScheduler.isSnoozeScheduled(applicationContext, med.id)) continue
+                        // User already snoozed — AlarmManager will re-fire on its own
+                        if (AlarmScheduler.isSnoozeScheduled(applicationContext, med.id)) continue
 
-                    // Already caught by a previous backed-up run of this worker, or by the
-                    // FCM backup channel racing in from the network side?
-                    if (repo.hasAnyFireEvent(med.id, time)) continue
+                        // Atomically check-and-claim so a concurrent AlarmReceiver/FcmReceiverService
+                        // firing for the same dose can't race past this check and double-notify.
+                        if (!repo.claimFire(med.id, med.name, time, "SAFETY_NET_FIRED", "missed by ${(now - time) / 60_000}min")) continue
 
-                    val delayMin = (now - time) / 60_000
-                    repo.logAudit(med.id, med.name, time, "SAFETY_NET_FIRED", "missed by ${delayMin}min")
-                    NotificationHelper.showMedicationAlert(
-                        applicationContext, med.id, med.name, med.dosage, time, settings
-                    )
+                        NotificationHelper.showMedicationAlert(
+                            applicationContext, med.id, med.name, med.dosage, time, settings
+                        )
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("SafetyNetWorker", "Failed processing medication ${med.id}", e)
                 }
             }
         }

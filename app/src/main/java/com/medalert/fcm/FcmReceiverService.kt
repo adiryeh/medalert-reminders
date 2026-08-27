@@ -32,14 +32,15 @@ class FcmReceiverService : FirebaseMessagingService() {
             val med = repo.getMedication(medicationId) ?: return@launch
             if (!med.active) return@launch
 
-            if (repo.getHistoryEntry(medicationId, scheduledTime) != null ||
-                repo.hasAnyFireEvent(medicationId, scheduledTime)) {
-                return@launch
-            }
+            if (repo.getHistoryEntry(medicationId, scheduledTime) != null) return@launch
+
+            val delayMin = (System.currentTimeMillis() - scheduledTime) / 60_000
+            // Atomically check-and-claim so AlarmReceiver/SafetyNetWorker racing in for the
+            // same dose (this push can arrive late, after local channels already recovered)
+            // can't both pass a plain check before either writes.
+            if (!repo.claimFire(medicationId, med.name, scheduledTime, "FCM_FIRED", "missed by ${delayMin}min")) return@launch
 
             val settings = repo.getSettings(medicationId)
-            val delayMin = (System.currentTimeMillis() - scheduledTime) / 60_000
-            repo.logAudit(medicationId, med.name, scheduledTime, "FCM_FIRED", "missed by ${delayMin}min")
             NotificationHelper.showMedicationAlert(
                 applicationContext, medicationId, med.name, med.dosage, scheduledTime, settings
             )

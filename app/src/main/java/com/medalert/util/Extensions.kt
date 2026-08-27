@@ -5,6 +5,9 @@ import com.medalert.data.db.entity.ScheduleType
 import org.json.JSONArray
 import java.util.Calendar
 
+/** endDate == 0 means "no end". */
+private fun withinEndDate(endDate: Long, t: Long) = endDate == 0L || t <= endDate
+
 fun Schedule.nextOccurrences(count: Int): List<Long> {
     val results = mutableListOf<Long>()
     val times = parseTimes(timesOfDay)
@@ -23,7 +26,7 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
                     cal.set(Calendar.HOUR_OF_DAY, time.first)
                     cal.set(Calendar.MINUTE, time.second)
                     cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                    if (cal.timeInMillis > now) results.add(cal.timeInMillis)
+                    if (cal.timeInMillis > now && withinEndDate(endDate, cal.timeInMillis)) results.add(cal.timeInMillis)
                     if (results.size >= count) break
                 }
                 dayOffset++
@@ -42,7 +45,7 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
                         cal.set(Calendar.HOUR_OF_DAY, time.first)
                         cal.set(Calendar.MINUTE, time.second)
                         cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                        if (cal.timeInMillis > now) results.add(cal.timeInMillis)
+                        if (cal.timeInMillis > now && withinEndDate(endDate, cal.timeInMillis)) results.add(cal.timeInMillis)
                         if (results.size >= count) break
                     }
                 }
@@ -51,18 +54,22 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
             }
         }
         ScheduleType.EVERY_X_DAYS -> {
-            var base = startDate
+            // Calendar.add(DAY_OF_YEAR, ...) — not raw millisecond arithmetic — so a DST
+            // transition doesn't shift the dose onto the wrong calendar day.
+            val safeInterval = if (intervalDays > 0) intervalDays else 1
+            var dayOffset = 0
             while (results.size < count) {
+                cal.timeInMillis = startDate
+                cal.add(Calendar.DAY_OF_YEAR, dayOffset)
                 for (time in times) {
-                    cal.timeInMillis = base
                     cal.set(Calendar.HOUR_OF_DAY, time.first)
                     cal.set(Calendar.MINUTE, time.second)
                     cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                    if (cal.timeInMillis > now) results.add(cal.timeInMillis)
+                    if (cal.timeInMillis > now && withinEndDate(endDate, cal.timeInMillis)) results.add(cal.timeInMillis)
                     if (results.size >= count) break
                 }
-                base += intervalDays * 86_400_000L
-                if (base > now + 365 * 86_400_000L) break
+                dayOffset += safeInterval
+                if (dayOffset > 400) break
             }
         }
         ScheduleType.SINGLE_DATE -> {
@@ -71,7 +78,7 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
                 cal.set(Calendar.HOUR_OF_DAY, time.first)
                 cal.set(Calendar.MINUTE, time.second)
                 cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                if (cal.timeInMillis > now) results.add(cal.timeInMillis)
+                if (cal.timeInMillis > now && withinEndDate(endDate, cal.timeInMillis)) results.add(cal.timeInMillis)
             }
         }
         ScheduleType.COMPLEX_CYCLE -> {
@@ -87,7 +94,7 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
                         cal.set(Calendar.HOUR_OF_DAY, time.first)
                         cal.set(Calendar.MINUTE, time.second)
                         cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                        if (cal.timeInMillis > now) results.add(cal.timeInMillis)
+                        if (cal.timeInMillis > now && withinEndDate(endDate, cal.timeInMillis)) results.add(cal.timeInMillis)
                         if (results.size >= count) break
                     }
                 }
@@ -102,7 +109,8 @@ fun Schedule.nextOccurrences(count: Int): List<Long> {
 /**
  * Returns all scheduled occurrences within [from, to] (inclusive), including past times.
  * Never returns occurrences before schedule.startDate — prevents phantom "overdue" entries
- * for medications that didn't exist yet on those dates.
+ * for medications that didn't exist yet on those dates. Never returns occurrences after
+ * schedule.endDate (0 = no end).
  */
 fun occurrencesInRange(schedule: Schedule, from: Long, to: Long): List<Long> {
     val results = mutableListOf<Long>()
@@ -110,18 +118,20 @@ fun occurrencesInRange(schedule: Schedule, from: Long, to: Long): List<Long> {
     if (times.isEmpty()) return results
     val cal = Calendar.getInstance()
     val effectiveFrom = maxOf(from, schedule.startDate)  // never before medication was created
+    val effectiveTo = if (schedule.endDate != 0L) minOf(to, schedule.endDate) else to
+    if (effectiveTo < effectiveFrom) return results
 
     when (schedule.type) {
         ScheduleType.DAILY, ScheduleType.MULTIPLE_TIMES_DAILY -> {
             var cur = Calendar.getInstance().apply { timeInMillis = effectiveFrom }
             cur.set(Calendar.HOUR_OF_DAY, 0); cur.set(Calendar.MINUTE, 0); cur.set(Calendar.SECOND, 0)
-            while (cur.timeInMillis <= to) {
+            while (cur.timeInMillis <= effectiveTo) {
                 for (time in times) {
                     cal.timeInMillis = cur.timeInMillis
                     cal.set(Calendar.HOUR_OF_DAY, time.first)
                     cal.set(Calendar.MINUTE, time.second)
                     cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                    if (cal.timeInMillis in effectiveFrom..to) results.add(cal.timeInMillis)
+                    if (cal.timeInMillis in effectiveFrom..effectiveTo) results.add(cal.timeInMillis)
                 }
                 cur.add(Calendar.DAY_OF_YEAR, 1)
             }
@@ -130,30 +140,33 @@ fun occurrencesInRange(schedule: Schedule, from: Long, to: Long): List<Long> {
             val days = parseDays(schedule.daysOfWeek)
             var cur = Calendar.getInstance().apply { timeInMillis = effectiveFrom }
             cur.set(Calendar.HOUR_OF_DAY, 0); cur.set(Calendar.MINUTE, 0); cur.set(Calendar.SECOND, 0)
-            while (cur.timeInMillis <= to) {
+            while (cur.timeInMillis <= effectiveTo) {
                 if (cur.get(Calendar.DAY_OF_WEEK) in days) {
                     for (time in times) {
                         cal.timeInMillis = cur.timeInMillis
                         cal.set(Calendar.HOUR_OF_DAY, time.first)
                         cal.set(Calendar.MINUTE, time.second)
                         cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                        if (cal.timeInMillis in effectiveFrom..to) results.add(cal.timeInMillis)
+                        if (cal.timeInMillis in effectiveFrom..effectiveTo) results.add(cal.timeInMillis)
                     }
                 }
                 cur.add(Calendar.DAY_OF_YEAR, 1)
             }
         }
         ScheduleType.EVERY_X_DAYS -> {
-            var base = schedule.startDate
-            while (base <= to) {
+            // Calendar.add(DAY_OF_YEAR, ...) — matches nextOccurrences — so this function can't
+            // disagree with it across a DST boundary the way raw millisecond stepping would.
+            val safeInterval = if (schedule.intervalDays > 0) schedule.intervalDays else 1
+            val cursor = Calendar.getInstance().apply { timeInMillis = schedule.startDate }
+            while (cursor.timeInMillis <= effectiveTo) {
                 for (time in times) {
-                    cal.timeInMillis = base
+                    cal.timeInMillis = cursor.timeInMillis
                     cal.set(Calendar.HOUR_OF_DAY, time.first)
                     cal.set(Calendar.MINUTE, time.second)
                     cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                    if (cal.timeInMillis in effectiveFrom..to) results.add(cal.timeInMillis)
+                    if (cal.timeInMillis in effectiveFrom..effectiveTo) results.add(cal.timeInMillis)
                 }
-                base += schedule.intervalDays * 86_400_000L
+                cursor.add(Calendar.DAY_OF_YEAR, safeInterval)
             }
         }
         ScheduleType.SINGLE_DATE -> {
@@ -162,26 +175,26 @@ fun occurrencesInRange(schedule: Schedule, from: Long, to: Long): List<Long> {
                 cal.set(Calendar.HOUR_OF_DAY, time.first)
                 cal.set(Calendar.MINUTE, time.second)
                 cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                if (cal.timeInMillis in effectiveFrom..to) results.add(cal.timeInMillis)
+                if (cal.timeInMillis in effectiveFrom..effectiveTo) results.add(cal.timeInMillis)
             }
         }
         ScheduleType.COMPLEX_CYCLE -> {
             if (schedule.cycleDaysOn <= 0) return results
             val cycleLen = schedule.cycleDaysOn + schedule.cycleDaysOff
             var dayOffset = 0
-            var base = schedule.startDate
-            while (base <= to) {
+            val cursor = Calendar.getInstance().apply { timeInMillis = schedule.startDate }
+            while (cursor.timeInMillis <= effectiveTo) {
                 val dayInCycle = dayOffset % cycleLen
                 if (dayInCycle < schedule.cycleDaysOn) {
                     for (time in times) {
-                        cal.timeInMillis = base
+                        cal.timeInMillis = cursor.timeInMillis
                         cal.set(Calendar.HOUR_OF_DAY, time.first)
                         cal.set(Calendar.MINUTE, time.second)
                         cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
-                        if (cal.timeInMillis in effectiveFrom..to) results.add(cal.timeInMillis)
+                        if (cal.timeInMillis in effectiveFrom..effectiveTo) results.add(cal.timeInMillis)
                     }
                 }
-                base += 86_400_000L
+                cursor.add(Calendar.DAY_OF_YEAR, 1)
                 dayOffset++
             }
         }
@@ -197,7 +210,10 @@ private fun parseTimes(json: String): List<Pair<Int, Int>> {
             val parts = arr.getString(it).split(":")
             Pair(parts[0].toInt(), parts[1].toInt())
         }
-    } catch (e: Exception) { emptyList() }
+    } catch (e: Exception) {
+        android.util.Log.e("ScheduleParse", "Malformed timesOfDay JSON: $json", e)
+        emptyList()
+    }
 }
 
 private fun parseDays(json: String): Set<Int> {
@@ -205,7 +221,10 @@ private fun parseDays(json: String): Set<Int> {
     return try {
         val arr = JSONArray(json)
         (0 until arr.length()).map { arr.getInt(it) }.toSet()
-    } catch (e: Exception) { emptySet() }
+    } catch (e: Exception) {
+        android.util.Log.e("ScheduleParse", "Malformed daysOfWeek JSON: $json", e)
+        emptySet()
+    }
 }
 
 fun Long.toDisplayTime(): String {
