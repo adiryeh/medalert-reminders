@@ -12,6 +12,17 @@ object AlarmScheduler {
 
     private const val MAX_FUTURE_ALARMS = 100
 
+    // PendingIntent request codes are namespaced per medication: medicationId * REQUEST_CODE_SLOT_SIZE + offset.
+    // Regular dose alarms use offsets 0..MAX_FUTURE_ALARMS-1 (index into the occurrence list);
+    // the fixed offsets below are reserved slots for the other alarm types on that same medication.
+    // These values are unchanged from before this was named — do not renumber, or existing
+    // scheduled PendingIntents on devices already running an older build won't match anymore.
+    private const val REQUEST_CODE_SLOT_SIZE     = 10000
+    private const val OFFSET_MISSED_CHECK        = 9998
+    private const val OFFSET_SNOOZE_OR_LAST_DOSE = 9999
+
+    private fun requestCode(medicationId: Long, offset: Int) = (medicationId * REQUEST_CODE_SLOT_SIZE + offset).toInt()
+
     /**
      * Schedules one alarm using setAlarmClock() — the strongest wake guarantee AlarmManager
      * offers. Unlike setExactAndAllowWhileIdle(), OEMs (Samsung included) are far less willing
@@ -45,7 +56,7 @@ object AlarmScheduler {
                 putExtra("medication_dosage", medication.dosage)
                 putExtra("scheduled_time", timeMillis)
             }
-            val requestCode = (medication.id * 10000 + index).toInt()
+            val requestCode = requestCode(medication.id, index)
             val pi = PendingIntent.getBroadcast(
                 context, requestCode, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -62,7 +73,7 @@ object AlarmScheduler {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         for (i in 0 until MAX_FUTURE_ALARMS) {
             val intent = Intent(context, AlarmReceiver::class.java)
-            val requestCode = (medicationId * 10000 + i).toInt()
+            val requestCode = requestCode(medicationId, i)
             val pi = PendingIntent.getBroadcast(
                 context, requestCode, intent,
                 PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
@@ -87,7 +98,7 @@ object AlarmScheduler {
             putExtra(MissedCheckReceiver.EXTRA_MED_NAME, medicationName)
             putExtra(MissedCheckReceiver.EXTRA_SCHEDULED_TIME, scheduledTime)
         }
-        val requestCode = (medicationId * 10000 + 9998).toInt()
+        val requestCode = requestCode(medicationId, OFFSET_MISSED_CHECK)
         val pi = PendingIntent.getBroadcast(
             context, requestCode, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -98,7 +109,7 @@ object AlarmScheduler {
     /** Returns true if a snooze alarm is already pending for this medication. */
     fun isSnoozeScheduled(context: Context, medicationId: Long): Boolean {
         val intent = Intent(context, AlarmReceiver::class.java)
-        val requestCode = (medicationId * 10000 + 9999).toInt()
+        val requestCode = requestCode(medicationId, OFFSET_SNOOZE_OR_LAST_DOSE)
         val pi = PendingIntent.getBroadcast(
             context, requestCode, intent,
             PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
@@ -109,7 +120,7 @@ object AlarmScheduler {
     fun cancelMissedCheck(context: Context, medicationId: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, MissedCheckReceiver::class.java)
-        val requestCode = (medicationId * 10000 + 9998).toInt()
+        val requestCode = requestCode(medicationId, OFFSET_MISSED_CHECK)
         val pi = PendingIntent.getBroadcast(
             context, requestCode, intent,
             PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
@@ -134,7 +145,7 @@ object AlarmScheduler {
             putExtra("scheduled_time", originalScheduledTime)  // ← original time, NOT triggerAt
             putExtra("is_snooze", true)
         }
-        val requestCode = (medicationId * 10000 + 9999).toInt()
+        val requestCode = requestCode(medicationId, OFFSET_SNOOZE_OR_LAST_DOSE)
         val pi = PendingIntent.getBroadcast(
             context, requestCode, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
