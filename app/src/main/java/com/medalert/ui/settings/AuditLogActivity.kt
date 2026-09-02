@@ -91,6 +91,7 @@ class AuditLogActivity : AppCompatActivity() {
                 "ACTION_SNOOZED"      -> "⏰ נדחה"             to "#FF8F00"
                 "SAFETY_NET_CHECKED" -> "🔍 בדיקת רקע"       to "#9E9E9E"
                 "REACTIVATE_FAILED"  -> "⚠ שחזור נכשל"       to "#E53935"
+                "SAFETY_NET_ERROR"   -> "🛑 שגיאה בבדיקת רקע" to "#E53935"
                 else                 -> item.event            to "#999999"
             }
 
