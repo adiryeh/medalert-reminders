@@ -86,6 +86,7 @@ class AuditLogActivity : AppCompatActivity() {
                 "RECEIVER_FIRED"     -> "📡 מקלט התעורר"    to "#388E3C"
                 "NOTIFICATION_SHOWN" -> "🔔 התראה נשלחה"    to "#1565C0"
                 "SAFETY_NET_FIRED"   -> "🆘 רשת ביטחון"     to "#E53935"
+                "FCM_FIRED"          -> "📶 גיבוי חיצוני (FCM)" to "#9C27B0"
                 "ACTION_TAKEN"       -> "✅ סומן נלקח"       to "#388E3C"
                 "ACTION_SKIPPED"     -> "❌ סומן דולג"       to "#757575"
                 "ACTION_SNOOZED"      -> "⏰ נדחה"             to "#FF8F00"
