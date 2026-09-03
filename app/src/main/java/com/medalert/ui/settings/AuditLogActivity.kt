@@ -33,6 +33,12 @@ class AuditLogActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener { finish() }
 
+        binding.tvLegendToggle.setOnClickListener {
+            val show = binding.cardLegend.visibility != View.VISIBLE
+            binding.cardLegend.visibility = if (show) View.VISIBLE else View.GONE
+            binding.tvLegendToggle.text = if (show) "ℹ️ מקרא — מה כל סמל אומר (הסתר)" else "ℹ️ מקרא — מה כל סמל אומר (הצג)"
+        }
+
         binding.recyclerAuditLog.layoutManager = LinearLayoutManager(this)
         binding.recyclerAuditLog.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)

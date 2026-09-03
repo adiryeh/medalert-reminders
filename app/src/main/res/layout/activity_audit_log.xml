@@ -66,6 +66,44 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Legend toggle -->
+    <TextView
+        android:id="@+id/tvLegendToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ℹ️ מקרא — מה כל סמל אומר (הצג)"
+        android:textSize="13sp"
+        android:textColor="#1565C0"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"/>
+
+    <!-- Legend content -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardLegend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#F5F5F5"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:textSize="13sp"
+            android:lineSpacingExtra="4dp"
+            android:text="📡 אזעקה ראשית — מנגנון מקורי, בתוך האפליקציה. תמיד המקור הראשון שמנסה.\n\n🆘 רשת ביטחון — מנגנון גיבוי בתוך האפליקציה, בודק כל 15 דקות אם משהו הוחמץ.\n\n🔍 בדיקת רקע — לא התראה בעצמה! רק אישור שבדיקת ה-15 דקות רצה, גם אם לא מצאה כלום להתריע.\n\n📶 גיבוי חיצוני (FCM) — לא מנגנון של האפליקציה. שרת חיצוני (GitHub) ששולח דחיפה אם שני הקודמים נכשלו.\n\n🔔 התראה נשלחה — לא מקור בפני עצמו, רק אישור שההתראה בפועל הוצגה על המסך.\n\n✅ ❌ ⏰ — הפעולה שלך: נלקח / דולג / נדחה.\n\n⚠ 🛑 — שגיאה שכדאי לשים לב אליה."/>
+    </androidx.cardview.widget.CardView>
+
     <!-- Log list -->
     <TextView
         android:layout_width="match_parent"
