@@ -1,12 +1,11 @@
 name: MedAlert reminder sender
 
 on:
-  schedule:
-    # GitHub throttles scheduled workflows heavily on low-activity repos — observed gaps
-    # of 2-5 hours in practice at */5, not the requested 5 minutes. Trying */15 as a free,
-    # zero-new-account experiment before moving to an external trigger (cron-job.org).
-    - cron: '*/15 * * * *'
-  workflow_dispatch: {} # allows manually triggering a run from the Actions tab, for testing
+  # GitHub's own `schedule:` trigger was tried at both */5 and */15 and throttled heavily on
+  # this low-activity repo regardless — observed gaps of 3-7 hours in practice. Removed.
+  # An external service (cron-job.org) now calls the GitHub API to fire workflow_dispatch
+  # on a real 5-minute cadence instead of relying on GitHub's own (unreliable) scheduler.
+  workflow_dispatch: {}
 
 jobs:
   send-reminders:
