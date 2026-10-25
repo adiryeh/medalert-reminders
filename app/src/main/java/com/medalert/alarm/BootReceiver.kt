@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.medalert.worker.RescheduleWorker
+import kotlinx.coroutines.launch
 
 class BootReceiver : BroadcastReceiver() {
 
@@ -25,8 +26,17 @@ class BootReceiver : BroadcastReceiver() {
         val pending = goAsync()
         try {
             RescheduleWorker.enqueue(context, cancelFirst = false)
-        } finally {
-            pending.finish()
+        } catch (e: Exception) {
+            android.util.Log.e("BootReceiver", "enqueue failed", e)
+        }
+        val event = if (intent.action == Intent.ACTION_MY_PACKAGE_REPLACED) "APP_UPDATED" else "DEVICE_BOOT"
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+            try {
+                com.medalert.data.repository.MedicationRepository(context)
+                    .logAudit(-1L, "מערכת", System.currentTimeMillis(), event, intent.action ?: "")
+            } finally {
+                pending.finish()
+            }
         }
     }
 }

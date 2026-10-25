@@ -102,14 +102,18 @@ class MedicationRepository(context: Context) {
     suspend fun getHistoryInRange(from: Long, to: Long) = withContext(Dispatchers.IO) { historyDao.getInRange(from, to) }
 
     // ── Audit Log ─────────────────────────────────────────────────────────────
-    suspend fun logAudit(medicationId: Long, medicationName: String, scheduledTime: Long, event: String, note: String = "") {
+    suspend fun logAudit(
+        medicationId: Long, medicationName: String, scheduledTime: Long, event: String,
+        note: String = "", timestamp: Long = System.currentTimeMillis()
+    ) {
         withContext(Dispatchers.IO) {
             auditDao.insert(com.medalert.data.db.entity.AlarmAuditLog(
                 medicationId = medicationId,
                 medicationName = medicationName,
                 scheduledTime = scheduledTime,
                 event = event,
-                note = note
+                note = note,
+                timestamp = timestamp
             ))
         }
     }

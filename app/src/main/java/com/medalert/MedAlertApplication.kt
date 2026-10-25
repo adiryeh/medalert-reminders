@@ -21,6 +21,7 @@ class MedAlertApplication : Application() {
         scheduleIntegrityCheck()
         SafetyNetWorker.schedule(this)
         com.medalert.fcm.FcmSync.syncToken(this)
+        com.medalert.util.ProcessDiagnostics.record(this)
     }
 
     private fun createNotificationChannels() {

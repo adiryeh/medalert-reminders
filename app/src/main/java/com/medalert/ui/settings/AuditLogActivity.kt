@@ -99,6 +99,10 @@ class AuditLogActivity : AppCompatActivity() {
                 "SAFETY_NET_CHECKED" -> "🔍 בדיקת רקע"       to "#9E9E9E"
                 "REACTIVATE_FAILED"  -> "⚠ שחזור נכשל"       to "#E53935"
                 "SAFETY_NET_ERROR"   -> "🛑 שגיאה בבדיקת רקע" to "#E53935"
+                "APP_STARTED"        -> "🟢 האפליקציה התעוררה" to "#00897B"
+                "PROCESS_EXIT"       -> "⛔ האפליקציה נסגרה"   to "#6D4C41"
+                "DEVICE_BOOT"        -> "🔄 אתחול טלפון"       to "#5E35B1"
+                "APP_UPDATED"        -> "⬆ עדכון אפליקציה"     to "#5E35B1"
                 else                 -> item.event            to "#999999"
             }
 
